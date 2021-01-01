@@ -1,0 +1,12 @@
+[package]
+name = "easy-stream"
+version = "0.1.0"
+authors = ["David Schramm <david.schramm@live.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+v4l = "0.10"
+tiny_http = "0.6"
+rust-embed = "5.7"
