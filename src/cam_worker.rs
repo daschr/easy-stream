@@ -25,7 +25,7 @@ pub fn update_framebuf(
     loop {
         {
             let mut buf = frame.write().unwrap();
-            let next_frame=stream.next().unwrap();
+            let next_frame = stream.next().unwrap();
             buf.resize(next_frame.len(), 0u8);
             buf.copy_from_slice(next_frame.data());
         }
