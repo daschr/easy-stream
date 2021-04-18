@@ -18,7 +18,7 @@ fn main() {
 
     if argc == 2 && env::args().nth(1).unwrap() == "-h" {
         eprintln!(
-            "Usage: {} [?device num] [?resolution]",
+            "Usage: {} [?device num] [?resolution] [?sleeptime between frame capture]",
             env::args().nth(0).unwrap()
         );
         return;
