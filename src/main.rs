@@ -41,11 +41,11 @@ struct Args {
     #[arg(long, default_value_t = false)]
     debug: bool,
 
-    /// resolution
+    /// resolution [default: 1920x1080]
     #[arg(long)]
     resolution: Option<String>,
 
-    /// listen
+    /// listen [default: 0.0.0.0:8000]
     #[arg(long)]
     listen: Option<SocketAddr>,
 }
