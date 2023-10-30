@@ -2,7 +2,10 @@ use anyhow::Result;
 use std::sync::{Arc, RwLock};
 use std::time::Duration;
 use tokio::time::sleep;
+use v4l::io::traits::CaptureStream;
 use v4l::prelude::*;
+use v4l::video::Capture;
+use v4l::Format;
 use v4l::FourCC;
 
 pub struct FrameUpdater {
@@ -28,22 +31,22 @@ impl FrameUpdater {
     }
 
     pub async fn update_framebuf(&self) -> Result<()> {
-        let mut dev = CaptureDevice::new(self.device)?;
+        let mut dev = Device::new(self.device)?;
 
-        let mut fmt = dev.format().expect("failed reading format!");
-        fmt.width = self.resolution.0;
-        fmt.height = self.resolution.1;
-        fmt.fourcc = FourCC::new(b"MJPG");
-        dev.set_format(&fmt)?;
+        dev.set_format(&Format::new(
+            self.resolution.0,
+            self.resolution.1,
+            FourCC::new(b"MJPG"),
+        ))?;
 
-        let mut stream = MmapStream::with_buffers(&mut dev, 4)?;
+        let mut stream = MmapStream::with_buffers(&mut dev, v4l::buffer::Type::VideoCapture, 4)?;
 
         loop {
             {
                 let mut buf = self.frame.write().unwrap();
                 let next_frame = stream.next().unwrap();
-                buf.resize(next_frame.len(), 0u8);
-                buf.copy_from_slice(next_frame.data());
+                buf.resize(next_frame.0.len(), 0u8);
+                buf.copy_from_slice(next_frame.0);
             }
 
             sleep(self.update_interval).await;
